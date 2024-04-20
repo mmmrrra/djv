@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>معلومات المنتجات</title>
+    <script>
+        var products = JSON.parse(localStorage.getItem('products')) || [];
+        var soldCount = parseInt(localStorage.getItem('soldCount')) || 0;
+        var totalRetailPrice = parseFloat(localStorage.getItem('totalRetailPrice')) || 0;
+        var totalWholesalePrice = parseFloat(localStorage.getItem('totalWholesalePrice')) || 0;
+
+        function addProduct() {
+            var productName = document.getElementById("product-name").value;
+            var retailPrice = parseFloat(document.getElementById("retail-price").value);
+            var wholesalePrice = parseFloat(document.getElementById("wholesale-price").value);
+
+            if (productName !== "" && !isNaN(retailPrice) && !isNaN(wholesalePrice)) {
+                var product = {
+                    name: productName,
+                    retailPrice: retailPrice,
+                    wholesalePrice: wholesalePrice
+                };
+
+                products.push(product);
+
+                soldCount++;
+                totalRetailPrice += retailPrice;
+                totalWholesalePrice += wholesalePrice;
+
+                document.getElementById("product-name").value = "";
+                document.getElementById("retail-price").value = "";
+                document.getElementById("wholesale-price").value = "";
+
+                saveDataToLocalStorage();
+            }
+        }
+
+        function displayProducts() {
+            var productList = document.getElementById("product-list");
+            productList.innerHTML = "";
+
+            for (var i = 0; i < products.length; i++) {
+                var product = products[i];
+
+                var listItem = document.createElement("li");
+                listItem.innerHTML = "<strong>اسم المنتج:</strong> " + product.name + "<br>" +
+                                    "<strong>سعر التجزئة:</strong> " + product.retailPrice + "<br>" +
+                                    "<strong>سعر الجملة:</strong> " + product.wholesalePrice + "<br><br>";
+
+                productList.appendChild(listItem);
+            }
+
+            saveDataToLocalStorage();
+        }
+
+        function displayStatistics() {
+            var soldCountElement = document.getElementById("sold-count");
+            soldCountElement.innerText = "عدد المنتجات المباعة: " + soldCount;
+
+            var totalRetailPriceElement = document.getElementById("total-retail-price");
+            totalRetailPriceElement.innerText = "مجموع سعر المنتجات بالتجزئة: " + totalRetailPrice;
+
+            var totalWholesalePriceElement = document.getElementById("total-wholesale-price");
+            totalWholesalePriceElement.innerText = "مجموع سعر المنتجات بالجملة: " + totalWholesalePrice;
+
+            saveDataToLocalStorage();
+        }
+
+        function saveDataToLocalStorage() {
+            localStorage.setItem('products', JSON.stringify(products));
+            localStorage.setItem('soldCount', soldCount.toString());
+            localStorage.setItem('totalRetailPrice', totalRetailPrice.toString());
+            localStorage.setItem('totalWholesalePrice', totalWholesalePrice.toString());
+        }
+
+        function clearData() {
+            localStorage.clear();
+            products = [];
+            soldCount = 0;
+            totalRetailPrice = 0;
+            totalWholesalePrice = 0;
+            document.getElementById("product-list").innerHTML = "";
+            document.getElementById("sold-count").innerText = "";
+            document.getElementById("total-retail-price").innerText = "";
+            document.getElementById("total-wholesale-price").innerText = "";
+            document.getElementById("product-name").value = "";
+            document.getElementById("retail-price").value = "";
+            document.getElementById("wholesale-price").value = "";
+        }
+
+        window.onload = function() {
+            displayProducts();
+            displayStatistics();
+        }
+    </script>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 5px;
+          }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>معلومات المنتجات</h1>
+        
+        <div class="input-container">
+            <input type="text" id="product-name" placeholder="أدخل اسم المنتج">
+            <input type="number" id="retail-price" placeholder="أدخل سعر التجزئة">
+            <input type="number" id="wholesale-price" placeholder="أدخل سعر الجملة">
+            <button class="button" onclick="addProduct()">إضافة منتج</button>
+        </div>
+
+        <div>
+            <button class="button" onclick="displayProducts()">عرض المنتجات</button>
+            <button class="button" onclick="displayStatistics()">عرض الإحصائيات</button>
+        </div>
+        
+        <ul id="product-list"></ul>
+
+        <div id="statistics">
+            <p id="sold-count"></p>
+            <p id="total-retail-price"></p>
+            <p id="total-wholesale-price"></p>
+        </div>
+    </div>
+</body>
+</html>
