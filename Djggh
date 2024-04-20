@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>إضافة بيانات</title>
+</head>
+<body>
+    <h1>إضافة بيانات</h1>
+    <form action="/add_data" method="POST">
+        <label for="name">الاسم:</label>
+        <input type="text" id="name" name="name"><br><br>
+        
+        <label for="word">الكلمة:</label>
+        <input type="text" id="word" name="word"><br><br>
+
+        <label for="date">التاريخ:</label>
+        <input type="date" id="date" name="date"><br><br>
+
+        <input type="submit" value="إضافة">
+    </form>
+</body>
+</html>
